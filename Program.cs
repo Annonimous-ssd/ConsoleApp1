@@ -112,17 +112,24 @@ namespace ConsoleApp1
         {
             String line;
             Console.WriteLine("įveskite pilną txt failo vietą");
-            String txtFileLocation = Console.ReadLine();
-            System.IO.StreamReader text = new System.IO.StreamReader(txtFileLocation);
-            while((line = text.ReadLine()) != null)
+            try
             {
-                string[] student = line.Split(' ');
-                List<int> homework = new List<int>(new int[] { int.Parse(student[2]), int.Parse(student[3]), int.Parse(student[4]), int.Parse(student[5]), int.Parse(student[6])});
-                students.Add(new Students(
-                    student[0], student[1],
-                    homework,
-                    int.Parse(student[7])
-                    ));
+                String txtFileLocation = Console.ReadLine();
+                System.IO.StreamReader text = new System.IO.StreamReader(txtFileLocation);
+                while ((line = text.ReadLine()) != null)
+                {
+                    string[] student = line.Split(' ');
+                    List<int> homework = new List<int>(new int[] { int.Parse(student[2]), int.Parse(student[3]), int.Parse(student[4]), int.Parse(student[5]), int.Parse(student[6]) });
+                    students.Add(new Students(
+                        student[0], student[1],
+                        homework,
+                        int.Parse(student[7])
+                        ));
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("error log, {0}", e.Message);
             }
             
         }
