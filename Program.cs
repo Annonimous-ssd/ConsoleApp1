@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ConsoleApp1
 {
@@ -18,6 +20,10 @@ namespace ConsoleApp1
             Console.WriteLine("1.Suvesti mokinius");
             Console.WriteLine("2.Išvesti mokinių rezultatus");
             Console.WriteLine("3.Išeiti");
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine("4.surinkti mokinius is failo");
+
+
             choise = Console.ReadLine();
             switch (choise)
             {
@@ -62,11 +68,21 @@ namespace ConsoleApp1
                         {
                             finalResults(students);
                         }
-                        goto Start;                          
+                        else
+                        {
+                            Console.WriteLine("-----nu nėra monikių-----");
+                        }
+                         goto Start;
+                        
                     }
                 case "3":
                     {
                         break;
+                    }
+                case "4":
+                    {
+                        ReadDataFromFile(students);
+                        goto Start;
                     }
             }
         }
@@ -87,9 +103,28 @@ namespace ConsoleApp1
                 average = Math.Round(average, 2);
                 average = sum / students[i].HomeWorkMarks.Count;
 
-                Console.WriteLine(students[i].Name + " " + students[i].Surname + "                       " + average + "    /   " + GetMedian(students[i].HomeWorkMarks));
+                Console.WriteLine("{0,-20} {1,-22} {2,-2:N2} / {3, -10:N2}", students[i].Name, students[i].Surname, average, GetMedian(students[i].HomeWorkMarks));
             }
 
+        }
+
+        private static void ReadDataFromFile(List<Students> students)
+        {
+            String line;
+            Console.WriteLine("įveskite pilną txt failo vietą");
+            String txtFileLocation = Console.ReadLine();
+            System.IO.StreamReader text = new System.IO.StreamReader(txtFileLocation);
+            while((line = text.ReadLine()) != null)
+            {
+                string[] student = line.Split(' ');
+                List<int> homework = new List<int>(new int[] { int.Parse(student[2]), int.Parse(student[3]), int.Parse(student[4]), int.Parse(student[5]), int.Parse(student[6])});
+                students.Add(new Students(
+                    student[0], student[1],
+                    homework,
+                    int.Parse(student[7])
+                    ));
+            }
+            
         }
 
         private static double GetMedian(List<int> marks)
