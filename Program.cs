@@ -102,7 +102,7 @@ namespace ConsoleApp1
                 }
                 average = Math.Round(average, 2);
                 average = sum / students[i].HomeWorkMarks.Count;
-
+                List<Students> sortList = students.OrderBy(o => o.Name).ToList();
                 Console.WriteLine("{0,-20} {1,-22} {2,-2:N2} / {3, -10:N2}", students[i].Name, students[i].Surname, average, GetMedian(students[i].HomeWorkMarks));
             }
 
