@@ -16,12 +16,13 @@ namespace ConsoleApp1
             int homeWorkLength;
             List<Students> students = new List<Students>();
             String choise;
-            Start:
+        Start:
             Console.WriteLine("1.Suvesti mokinius");
             Console.WriteLine("2.Išvesti mokinių rezultatus");
             Console.WriteLine("3.Išeiti");
             Console.WriteLine("-------------------------------");
             Console.WriteLine("4.surinkti mokinius is failo");
+            Console.WriteLine("5.sugeneruoti mokinių failą");
 
 
             choise = Console.ReadLine();
@@ -55,7 +56,7 @@ namespace ConsoleApp1
                                 students.Add(new Students(name, surname, homeWorkMarks, examMark));
                             }
                         }
-                        catch(InvalidCastException e)
+                        catch (InvalidCastException e)
                         {
                             throw new Exception("Fsio vyte baiges error tau dabar", e);
 
@@ -72,8 +73,8 @@ namespace ConsoleApp1
                         {
                             Console.WriteLine("-----nu nėra monikių-----");
                         }
-                         goto Start;
-                        
+                        goto Start;
+
                     }
                 case "3":
                     {
@@ -82,6 +83,11 @@ namespace ConsoleApp1
                 case "4":
                     {
                         ReadDataFromFile(students);
+                        goto Start;
+                    }
+                case "5":
+                    {
+                        StudentsFile();
                         goto Start;
                     }
             }
@@ -96,7 +102,7 @@ namespace ConsoleApp1
             for (int i = 0; i < students.Count; i++)
             {
                 students[i].HomeWorkMarks.Add(students[i].ExamMark);
-                for(int j = 0; j < students[i].HomeWorkMarks.Count; j++)
+                for (int j = 0; j < students[i].HomeWorkMarks.Count; j++)
                 {
                     sum += students[i].HomeWorkMarks[j];
                 }
@@ -127,13 +133,55 @@ namespace ConsoleApp1
                         ));
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("error log, {0}", e.Message);
             }
-            
+
         }
 
+        private static void StudentsFile()
+        {
+            int min = 1;
+            int max = 10;
+            int sum = 0;
+            int count = 0;
+            string failedText = @"C:\Users\Mantas\source\repos\ConsoleApp1\failedText.txt";
+            string passedText = @"C:\Users\Mantas\source\repos\ConsoleApp1\passedText.txt";
+            Double average = 0;
+
+            Random randNum = new Random();
+            Console.WriteLine("Kiek norite kad sugeneruotų mokinių?");
+            count = Int32.Parse(Console.ReadLine());
+
+            for (int i = 0; i < count; i++)
+            {
+                string name = "name" + i;
+                string surname = "surname" + i;
+                int[] marks = Enumerable
+                     .Repeat(0, 5)
+                     .Select(i => randNum.Next(min, max))
+                     .ToArray();
+                for (int j = 0; j < marks.Length; j++)
+                {
+                    sum += marks[j];
+                }
+                average = Math.Round(average, 2);
+                average = sum / marks.Length;
+                if (average < 5)
+                {
+                    string[] failure = { name + " " + surname + " " + marks[0] + " " + marks[1] + " " + marks[2] + " " + marks[3] + " " + marks[4] + " " + "failed"};
+                    File.AppendAllLines(failedText, failure);
+                }
+                else if (average >= 5)
+                {
+                   string[] passed = { name + " " + surname + " " + marks[0] + " " + marks[1] + " " + marks[2] + " " + marks[3] + " " + marks[4] + " " + "Passed"};
+                    File.AppendAllLines(passedText, passed);
+                }
+                Array.Clear(marks, 0, marks.Length);
+                sum = 0;
+                    }
+        }
         private static double GetMedian(List<int> marks)
         {
             int count = marks.Count;
